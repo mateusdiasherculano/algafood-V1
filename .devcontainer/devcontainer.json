@@ -1,0 +1,27 @@
+{
+  "name": "Especialista Spring Rest - Algafood",
+
+  "dockerComposeFile": "docker-compose.yml",
+
+  "service": "dev",
+
+  "workspaceFolder": "/workspace",
+
+  "shutdownAction": "stopCompose",
+
+  "forwardPorts": [
+    8080,
+    5432
+  ],
+
+  "customizations": {
+    "vscode": {
+      "extensions": [
+        "vscjava.vscode-java-pack",
+        "redhat.java",
+        "vmware.vscode-spring-boot",
+        "ms-azuretools.vscode-docker"
+      ]
+    }
+  }
+}
