@@ -6,6 +6,7 @@ import jakarta.persistence.Id;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import java.math.BigDecimal;
+import jakarta.persistence.ManyToOne;
 
 @Data
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
@@ -20,5 +21,8 @@ public class Restaurante {
 	private String nome;
 
     private BigDecimal taxaFrete;
+
+    @ManyToOne
+    private Cozinha cozinha;
 
 }
