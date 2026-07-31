@@ -5,6 +5,7 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import lombok.NonNull;
 
 @Data
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
@@ -16,5 +17,6 @@ public class Cozinha {
 	@EqualsAndHashCode.Include
 	private Long id;
 
+	@NonNull
 	private String nome;
 }
