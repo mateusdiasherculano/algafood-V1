@@ -4,9 +4,10 @@ import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 import java.util.List;
 import com.algaworks.algafood_api.domain.model.Restaurante;
+import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
-
+@Repository
 public class RestauranteRepositoryImpl implements RestauranteRepository {
 
     @PersistenceContext

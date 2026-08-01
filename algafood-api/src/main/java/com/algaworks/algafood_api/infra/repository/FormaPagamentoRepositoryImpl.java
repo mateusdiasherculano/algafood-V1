@@ -3,9 +3,10 @@ import com.algaworks.algafood_api.domain.model.FormaPagamento;
 import com.algaworks.algafood_api.domain.repository.FormaPagamentoRepository;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
-
 import java.util.List;
+import org.springframework.stereotype.Repository;
 
+@Repository
 public class FormaPagamentoRepositoryImpl implements FormaPagamentoRepository {
 
     @PersistenceContext
