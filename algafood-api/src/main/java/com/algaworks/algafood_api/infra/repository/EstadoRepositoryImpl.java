@@ -1,10 +1,12 @@
 package com.algaworks.algafood_api.infra.repository;
 import com.algaworks.algafood_api.domain.model.Estado;
 import com.algaworks.algafood_api.domain.repository.EstadoRepository;
+import org.springframework.stereotype.Repository;
 import java.util.List;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 
+@Repository
 public class EstadoRepositoryImpl implements EstadoRepository {
 
     @PersistenceContext
