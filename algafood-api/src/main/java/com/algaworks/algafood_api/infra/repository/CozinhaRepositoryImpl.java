@@ -1,12 +1,14 @@
 package com.algaworks.algafood_api.infra.repository;
 import com.algaworks.algafood_api.domain.model.Cozinha;
 import com.algaworks.algafood_api.domain.repository.CozinhaRepository;
+
+import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 import java.util.List;
 
-
+@Repository
 public class CozinhaRepositoryImpl implements CozinhaRepository {
 
    @PersistenceContext
@@ -19,7 +21,7 @@ public class CozinhaRepositoryImpl implements CozinhaRepository {
     
     @Override
     @Transactional
-    public Cozinha Salvar(Cozinha cozinha) {
+    public Cozinha salvar(Cozinha cozinha) {
         return entityManager.merge(cozinha);
     }
 

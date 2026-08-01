@@ -1,0 +1,26 @@
+package com.algaworks.algafood_api.api.controller;
+import com.algaworks.algafood_api.domain.model.Cozinha;
+import com.algaworks.algafood_api.domain.repository.CozinhaRepository;
+import java.util.List;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
+@RestController
+@RequestMapping("/cozinhas")
+public class CozinhaController {
+
+    @Autowired
+    private CozinhaRepository cozinhaRepository;
+
+    CozinhaController(CozinhaRepository cozinhaRepository) {
+        this.cozinhaRepository = cozinhaRepository;
+    }
+    
+    @GetMapping
+    public List<Cozinha> listar() {
+        return cozinhaRepository.listar(); 
+    }
+
+}
