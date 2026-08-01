@@ -5,8 +5,8 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
-import lombok.NonNull;
 import java.math.BigDecimal;
+import jakarta.persistence.Column;
 import jakarta.persistence.ManyToOne;
 
 @Data
@@ -19,7 +19,7 @@ public class Restaurante {
 	@EqualsAndHashCode.Include
 	private Long id;
 
-    @NonNull
+    @Column(nullable = false)
 	private String nome;
 
     private BigDecimal taxaFrete;
