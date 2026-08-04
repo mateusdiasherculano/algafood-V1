@@ -17,8 +17,6 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.DeleteMapping;
 
 
-
-
 @RestController
 @RequestMapping("/cozinhas")
 public class CozinhaController {
