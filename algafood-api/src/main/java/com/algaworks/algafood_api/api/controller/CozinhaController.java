@@ -8,6 +8,9 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+
 
 
 @RestController
@@ -37,5 +40,13 @@ public class CozinhaController {
             return ResponseEntity.notFound().build();
         }
     }
+
+    @PostMapping
+    public ResponseEntity<Cozinha> adicionar(@RequestBody Cozinha cozinha) {
+        Cozinha cozinhaSalva = cozinhaRepository.salvar(cozinha);
+
+        return ResponseEntity.created(null).body(cozinhaSalva);
+    }
+    
 
 }
