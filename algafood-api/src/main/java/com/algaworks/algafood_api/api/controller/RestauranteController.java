@@ -1,9 +1,10 @@
 package com.algaworks.algafood_api.api.controller;
 
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.bind.annotation.PathVariable;
 import java.util.List;
+import org.springframework.http.ResponseEntity;
 
 import com.algaworks.algafood_api.domain.model.Restaurante;
 import com.algaworks.algafood_api.domain.repository.RestauranteRepository;
@@ -35,8 +36,14 @@ public class RestauranteController {
     }
 
     @GetMapping("/{id}")
-    public Restaurante buscar(@PathVariable Long id) {
-        return restauranteService.buscar(id);
+    public ResponseEntity<Restaurante> buscar(@PathVariable Long id) {
+        Restaurante restaurante = restauranteService.buscar(id);
+
+        if (restaurante != null) {
+            return ResponseEntity.ok(restaurante);
+        } else {
+            return ResponseEntity.notFound().build();
+        }
     }
     
     
