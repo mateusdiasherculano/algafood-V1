@@ -1,5 +1,9 @@
 package com.algaworks.algafood_api.domain.service;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.dao.EmptyResultDataAccessException;
+import com.algaworks.algafood_api.domain.exception.EntidadeEmUsoException;
+import com.algaworks.algafood_api.domain.exception.EntidadeNaoEncontradaException;
 import org.springframework.stereotype.Service;
 import com.algaworks.algafood_api.domain.repository.CozinhaRepository;
 import com.algaworks.algafood_api.domain.model.Cozinha;
@@ -19,6 +23,14 @@ public class CozinhaService {
     }
 
     public void excluir(Long id) {
-        cozinhaRepository.remover(id);
+        try {
+            cozinhaRepository.remover(id);
+        } catch(EmptyResultDataAccessException e) {
+            throw new EntidadeNaoEncontradaException(String.format("Não existe cadastro de cozinha com ID: %d", id));
+
+        }catch (DataIntegrityViolationException e) {
+            throw new EntidadeEmUsoException(String.format("Cozinha de ID %d não pode ser removida, pois está em uso", id), e);
+        }
+    
     }
 }
