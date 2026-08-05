@@ -1,6 +1,8 @@
 package com.algaworks.algafood_api.api.controller;
 import com.algaworks.algafood_api.domain.model.Cozinha;
 import com.algaworks.algafood_api.domain.repository.CozinhaRepository;
+import com.algaworks.algafood_api.domain.service.CozinhaService;
+
 import java.util.List;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,8 +26,12 @@ public class CozinhaController {
     @Autowired
     private CozinhaRepository cozinhaRepository;
 
-    CozinhaController(CozinhaRepository cozinhaRepository) {
+    @Autowired
+    private CozinhaService cozinhaService;
+
+    CozinhaController(CozinhaRepository cozinhaRepository, CozinhaService cozinhaService) {
         this.cozinhaRepository = cozinhaRepository;
+        this.cozinhaService = cozinhaService;
     }
     
     @GetMapping
@@ -47,7 +53,7 @@ public class CozinhaController {
 
     @PostMapping
     public ResponseEntity<Cozinha> adicionar(@RequestBody Cozinha cozinha) {
-        Cozinha cozinhaSalva = cozinhaRepository.salvar(cozinha);
+        Cozinha cozinhaSalva = cozinhaService.salvar(cozinha);
 
         return ResponseEntity.created(null).body(cozinhaSalva);
     }
@@ -58,7 +64,7 @@ public class CozinhaController {
 
         if (cozinhaAtual != null) {
             BeanUtils.copyProperties(cozinha, cozinhaAtual, "id");
-            cozinhaRepository.salvar(cozinhaAtual);
+            cozinhaService.salvar(cozinhaAtual);
 
             return ResponseEntity.ok(cozinhaAtual);
         } else {
