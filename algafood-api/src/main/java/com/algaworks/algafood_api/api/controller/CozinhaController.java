@@ -75,14 +75,10 @@ public class CozinhaController {
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> remover(@PathVariable Long id) { 
         try {
-            Cozinha cozinha = cozinhaRepository.buscar(id);
-
-            if (cozinha != null) {
-                cozinhaRepository.remover(cozinha);
-                return ResponseEntity.noContent().build();
-            } else {
-                return ResponseEntity.notFound().build();
-            }
+            
+            cozinhaService.excluir(id);
+            return ResponseEntity.noContent().build();
+            
         } catch (DataIntegrityViolationException e) {
             return ResponseEntity.status(HttpStatus.CONFLICT).build();
         }

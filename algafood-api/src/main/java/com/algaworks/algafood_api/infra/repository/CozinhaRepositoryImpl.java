@@ -6,6 +6,7 @@ import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
+import org.springframework.dao.EmptyResultDataAccessException;
 import java.util.List;
 
 @Repository
@@ -32,9 +33,18 @@ public class CozinhaRepositoryImpl implements CozinhaRepository {
 
     @Override
     @Transactional
-    public void remover(Cozinha cozinha) {
-        cozinha = buscar(cozinha.getId());
-        entityManager.remove(cozinha);
+    public void remover(Long id) {
+        Cozinha cozinha = buscar(id);
+
+        if (cozinha != null) {
+            entityManager.remove(cozinha);
+        }else{
+            throw new EmptyResultDataAccessException("Cozinha não encontrada para o ID: " + id, 1);
+
+        }
+            
+        
     }
 
 }
+
