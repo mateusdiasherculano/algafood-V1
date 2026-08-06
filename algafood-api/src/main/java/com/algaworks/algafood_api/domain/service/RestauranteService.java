@@ -19,4 +19,8 @@ public class RestauranteService {
         return restauranteRepository.buscar(id);
     }
 
+    public Restaurante salvar(Restaurante restaurante) {
+        return restauranteRepository.salvar(restaurante);
+    }
+
 }

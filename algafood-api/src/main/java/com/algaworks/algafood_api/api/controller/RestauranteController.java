@@ -11,6 +11,9 @@ import com.algaworks.algafood_api.domain.repository.RestauranteRepository;
 import com.algaworks.algafood_api.domain.service.RestauranteService;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+
 
 
 
@@ -29,7 +32,6 @@ public class RestauranteController {
         this.restauranteService = restauranteService;
     }
 
-
     @GetMapping()
     public List<Restaurante> listar() {
         return restauranteRepository.listar();
@@ -45,6 +47,14 @@ public class RestauranteController {
             return ResponseEntity.notFound().build();
         }
     }
+
+    @PostMapping
+    public ResponseEntity<Restaurante> adicionar(@RequestBody Restaurante restaurante) {
+        Restaurante restauranteSalvo = restauranteService.salvar(restaurante);
+        
+        return ResponseEntity.created(null).body(restauranteSalvo);
+    }
+    
     
     
 
