@@ -5,12 +5,17 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.BeanUtils;
 import org.springframework.web.bind.annotation.RestController;
 import java.util.List;
+import java.util.Map;
+import java.lang.reflect.Field;
+import org.springframework.util.ReflectionUtils;
+import tools.jackson.databind.json.JsonMapper;
 import com.algaworks.algafood_api.domain.exception.EntidadeNaoEncontradaException;
 import org.springframework.http.ResponseEntity;
 import com.algaworks.algafood_api.domain.model.Restaurante;
 import com.algaworks.algafood_api.domain.repository.RestauranteRepository;
 import com.algaworks.algafood_api.domain.service.RestauranteService;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -79,6 +84,34 @@ public class RestauranteController {
         } catch (EntidadeNaoEncontradaException e) {
             return ResponseEntity.status(404).body(e.getMessage());
         }
+    }
+
+    @PatchMapping("/{id}")
+    public ResponseEntity<?> atualizarParcial(@PathVariable Long id, @RequestBody Map<String, Object> campos) {
+            Restaurante restauranteExistente = restauranteService.buscar(id);
+            if (restauranteExistente == null) {
+                return ResponseEntity.notFound().build();
+            }
+
+            merge(campos, restauranteExistente);
+            
+            return atualizar(id, restauranteExistente);
+    }
+
+    private void merge(Map<String, Object> dadosOrigem, Restaurante restauranteDestino) {
+        JsonMapper objectMapper = new JsonMapper();
+        Restaurante restauranteOrigem = objectMapper.convertValue(dadosOrigem, Restaurante.class);
+
+        
+        dadosOrigem.forEach((nomePropriedade, valorPropriedade) -> {
+            Field field = ReflectionUtils.findField(Restaurante.class, nomePropriedade);
+            field.setAccessible(true);
+
+            Object novoValor = ReflectionUtils.getField(field, restauranteOrigem);
+
+            ReflectionUtils.setField(field, restauranteDestino, novoValor);
+            
+        });
     }
 
 }
