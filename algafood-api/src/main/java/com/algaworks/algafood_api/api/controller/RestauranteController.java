@@ -99,8 +99,8 @@ public class RestauranteController {
     }
 
     private void merge(Map<String, Object> dadosOrigem, Restaurante restauranteDestino) {
-        JsonMapper objectMapper = new JsonMapper();
-        Restaurante restauranteOrigem = objectMapper.convertValue(dadosOrigem, Restaurante.class);
+        JsonMapper jsonMapper = new JsonMapper();
+        Restaurante restauranteOrigem = jsonMapper.convertValue(dadosOrigem, Restaurante.class);
 
         
         dadosOrigem.forEach((nomePropriedade, valorPropriedade) -> {
