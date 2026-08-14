@@ -38,7 +38,7 @@ public class CozinhaController {
     
     @GetMapping
     public List<Cozinha> listar() {
-        return cozinhaRepository.findAll(); 
+        return cozinhaRepository.findAll();
     }
 
     @GetMapping("/{id}")

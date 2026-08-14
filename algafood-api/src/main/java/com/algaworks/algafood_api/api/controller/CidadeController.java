@@ -1,6 +1,7 @@
 package com.algaworks.algafood_api.api.controller;
-
 import org.springframework.beans.factory.annotation.Autowired;
+import java.util.List;
+import java.util.Optional;
 import org.springframework.http.HttpStatus;
 import com.algaworks.algafood_api.domain.exception.EntidadeEmUsoException;
 import org.springframework.http.ResponseEntity;
@@ -10,7 +11,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.beans.BeanUtils;
-import java.util.List;
 import com.algaworks.algafood_api.domain.exception.EntidadeNaoEncontradaException;
 import com.algaworks.algafood_api.domain.model.Cidade;
 import com.algaworks.algafood_api.domain.repository.CidadeRepository;
@@ -39,15 +39,15 @@ public class CidadeController {
 
     @GetMapping
     public List<Cidade> listar() {
-        return cidadeRepository.listar();
+        return cidadeRepository.findAll();
     }
 
     @GetMapping("/{id}")
     public ResponseEntity<Cidade> buscar(@PathVariable Long id) {
-        Cidade cidade = cidadeRepository.buscar(id);
+        Optional<Cidade> cidade = cidadeRepository.findById(id);
 
-        if (cidade != null) {
-            return ResponseEntity.ok(cidade);
+        if (cidade.isPresent()) {
+            return ResponseEntity.ok(cidade.get());
         } else {
             return ResponseEntity.notFound().build();
         }
@@ -65,11 +65,11 @@ public class CidadeController {
 
     @PutMapping("/{id}")
     public ResponseEntity<Cidade> atualizar(@PathVariable Long id, @RequestBody Cidade cidade) {
-        Cidade cidadeAtual = cidadeRepository.buscar(id);
+        Optional<Cidade> cidadeAtual = cidadeRepository.findById(id);
 
-        if (cidadeAtual != null) {
-           BeanUtils.copyProperties(cidade, cidadeAtual, "id");
-            Cidade cidadeAtualizada = cidadeService.salvar(cidadeAtual);
+        if (cidadeAtual.isPresent()) {
+           BeanUtils.copyProperties(cidade, cidadeAtual.get(), "id");
+            Cidade cidadeAtualizada = cidadeService.salvar(cidadeAtual.get());
             return ResponseEntity.ok(cidadeAtualizada);
         }
         return ResponseEntity.notFound().build();
