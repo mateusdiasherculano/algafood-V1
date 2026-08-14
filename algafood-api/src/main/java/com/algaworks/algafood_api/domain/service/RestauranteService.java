@@ -23,7 +23,8 @@ public class RestauranteService {
     }
 
     public Restaurante buscar(Long id) {
-        return restauranteRepository.buscar(id);
+        return restauranteRepository.findById(id).orElseThrow(
+            () -> new EntidadeNaoEncontradaException(String.format("Restaurante com ID %d não encontrado.", id)));
     }
 
     public Restaurante salvar(Restaurante restaurante) {
@@ -34,7 +35,7 @@ public class RestauranteService {
 
         restaurante.setCozinha(cozinha);
 
-        return restauranteRepository.salvar(restaurante);
+        return restauranteRepository.save(restaurante);
     }
 
 }
