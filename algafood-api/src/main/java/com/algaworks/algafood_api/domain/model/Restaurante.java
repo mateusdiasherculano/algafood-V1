@@ -8,11 +8,14 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import java.math.BigDecimal;
 import jakarta.persistence.Column;
+import jakarta.persistence.Embedded;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.JoinTable;
 import java.util.ArrayList;
 import java.util.List;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 @Data
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
@@ -30,8 +33,14 @@ public class Restaurante {
     private BigDecimal taxaFrete;
 
     @ManyToOne
+	@JoinColumn(name = "cozinha_id", nullable = false)
     private Cozinha cozinha;
 
+	@JsonIgnore
+	@Embedded
+	private Endereco endereco;
+
+	@JsonIgnore
 	@ManyToMany
 	@JoinTable(name = "restaurante_forma_pagamento",
 		joinColumns = @JoinColumn(name = "restaurante_id"),
