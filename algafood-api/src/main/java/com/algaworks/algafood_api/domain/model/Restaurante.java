@@ -18,10 +18,7 @@ import java.util.List;
 import java.time.LocalDateTime;
 import org.hibernate.annotations.UpdateTimestamp;
 import org.hibernate.annotations.CreationTimestamp;
-import jakarta.persistence.FetchType;
-
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 @Data
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
@@ -38,9 +35,7 @@ public class Restaurante {
 
     private BigDecimal taxaFrete;
 
-	//@JsonIgnore
-	@JsonIgnoreProperties("hibernateLazyInitializer")
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne 
 	@JoinColumn(name = "cozinha_id", nullable = false)
     private Cozinha cozinha;
 
@@ -58,7 +53,6 @@ public class Restaurante {
 	@Column(nullable = false)
 	private LocalDateTime dataAtualizacao;
 
-	@JsonIgnore
 	@ManyToMany
 	@JoinTable(name = "restaurante_forma_pagamento",
 		joinColumns = @JoinColumn(name = "restaurante_id"),
