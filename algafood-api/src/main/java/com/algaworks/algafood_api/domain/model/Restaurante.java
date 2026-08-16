@@ -14,6 +14,9 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.JoinTable;
 import java.util.ArrayList;
 import java.util.List;
+import java.time.LocalDateTime;
+import org.hibernate.annotations.UpdateTimestamp;
+import org.hibernate.annotations.CreationTimestamp;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
@@ -39,6 +42,16 @@ public class Restaurante {
 	@JsonIgnore
 	@Embedded
 	private Endereco endereco;
+
+	@JsonIgnore
+	@CreationTimestamp
+	@Column(nullable = false)
+	private LocalDateTime dataCadastro;
+
+	@JsonIgnore
+	@UpdateTimestamp
+	@Column(nullable = false)
+	private LocalDateTime dataAtualizacao;
 
 	@JsonIgnore
 	@ManyToMany
