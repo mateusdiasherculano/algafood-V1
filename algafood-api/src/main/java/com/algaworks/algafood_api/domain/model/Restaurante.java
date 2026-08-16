@@ -18,8 +18,10 @@ import java.util.List;
 import java.time.LocalDateTime;
 import org.hibernate.annotations.UpdateTimestamp;
 import org.hibernate.annotations.CreationTimestamp;
+import jakarta.persistence.FetchType;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 @Data
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
@@ -36,7 +38,9 @@ public class Restaurante {
 
     private BigDecimal taxaFrete;
 
-    @ManyToOne
+	//@JsonIgnore
+	@JsonIgnoreProperties("hibernateLazyInitializer")
+    @ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "cozinha_id", nullable = false)
     private Cozinha cozinha;
 
