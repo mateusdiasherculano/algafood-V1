@@ -81,7 +81,7 @@ public class RestauranteController {
             
             Restaurante restauranteExistenteEntity = restauranteExistente.get();
 
-            BeanUtils.copyProperties(restaurante, restauranteExistenteEntity, "id");
+            BeanUtils.copyProperties(restaurante, restauranteExistenteEntity, "id", "formasPagamento");
             Restaurante restauranteAtualizado = restauranteService.salvar(restauranteExistenteEntity);
             return ResponseEntity.ok(restauranteAtualizado);
 
