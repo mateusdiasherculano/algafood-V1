@@ -1,6 +1,6 @@
 package com.algaworks.algafood_api.domain.service;
+import com.algaworks.algafood_api.domain.exception.CidadeNaoEncontradaException;
 import com.algaworks.algafood_api.domain.exception.EntidadeEmUsoException;
-import com.algaworks.algafood_api.domain.exception.EntidadeNaoEncontradaException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.dao.EmptyResultDataAccessException;
@@ -12,6 +12,9 @@ import com.algaworks.algafood_api.domain.model.Estado;
 
 @Service
 public class CidadeService {
+
+    private static final String MSG_CIDADE_EM_USO 
+		= "Cidade de código %d não pode ser removida, pois está em uso";
 
     @Autowired
     private CidadeRepository cidadeRepository;
@@ -25,30 +28,31 @@ public class CidadeService {
     }
 
     public Cidade salvar(Cidade cidade) {
-        Long estadoId = cidade.getEstado().getId();
-        Estado estado = estadoService.buscar(estadoId);
+		Long estadoId = cidade.getEstado().getId();
 
-        if (estado == null) {
-            throw new EntidadeNaoEncontradaException(String.format("Estado com ID %d não encontrado.", estadoId));
-        }
-
-        cidade.setEstado(estado);
-        return cidadeRepository.save(cidade);
-    }
-
-    public void excluir(Long id) {
-        try {
-            Cidade cidade = cidadeRepository.findById(id).orElse(null);
-            if (cidade != null) {
-                cidadeRepository.deleteById(id);
-            }
-        } catch(EmptyResultDataAccessException e) {
-            throw new EntidadeNaoEncontradaException(String.format("Não existe cadastro de cidade com ID: %d", id));
-        } catch (DataIntegrityViolationException e) {
-            throw new EntidadeEmUsoException(String.format("Cidade de ID %d não pode ser removida, pois está em uso", id), e);
-        }
-        
-
-    }
+		Estado estado = estadoService.buscarOuFalhar(estadoId);
+		
+		cidade.setEstado(estado);
+		
+		return cidadeRepository.save(cidade);
+	}
+	
+	public void excluir(Long cidadeId) {
+		try {
+			cidadeRepository.deleteById(cidadeId);
+			
+		} catch (EmptyResultDataAccessException e) {
+			throw new CidadeNaoEncontradaException(cidadeId);
+		
+		} catch (DataIntegrityViolationException e) {
+			throw new EntidadeEmUsoException(
+				String.format(MSG_CIDADE_EM_USO, cidadeId));
+		}
+	}
+	
+	public Cidade buscarOuFalhar(Long cidadeId) {
+		return cidadeRepository.findById(cidadeId)
+			.orElseThrow(() -> new CidadeNaoEncontradaException(cidadeId));
+	}
 
 }

@@ -2,9 +2,8 @@ package com.algaworks.algafood_api.domain.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import com.algaworks.algafood_api.domain.repository.CozinhaRepository;
 import com.algaworks.algafood_api.domain.model.Cozinha;
-import com.algaworks.algafood_api.domain.exception.EntidadeNaoEncontradaException;
+import com.algaworks.algafood_api.domain.exception.RestauranteNaoEncontradoException;
 import com.algaworks.algafood_api.domain.model.Restaurante;
 import com.algaworks.algafood_api.domain.repository.RestauranteRepository;
 
@@ -15,27 +14,26 @@ public class RestauranteService {
     private RestauranteRepository restauranteRepository;
 
     @Autowired
-    private CozinhaRepository cozinhaRepository;
+    private CozinhaService cozinhaService;
 
-    public RestauranteService(RestauranteRepository restauranteRepository, CozinhaRepository cozinhaRepository) {
+    public RestauranteService(RestauranteRepository restauranteRepository, CozinhaService cozinhaService) {
         this.restauranteRepository = restauranteRepository;
-        this.cozinhaRepository = cozinhaRepository;
-    }
-
-    public Restaurante buscar(Long id) {
-        return restauranteRepository.findById(id).orElseThrow(
-            () -> new EntidadeNaoEncontradaException(String.format("Restaurante com ID %d não encontrado.", id)));
+        this.cozinhaService = cozinhaService;
     }
 
     public Restaurante salvar(Restaurante restaurante) {
-        Long cozinhaId = restaurante.getCozinha().getId();
-        
-        Cozinha cozinha = cozinhaRepository.findById(cozinhaId).orElseThrow(
-        () -> new EntidadeNaoEncontradaException(String.format("Cozinha com ID %d não encontrada.", cozinhaId)));
-
-        restaurante.setCozinha(cozinha);
-
-        return restauranteRepository.save(restaurante);
-    }
+		Long cozinhaId = restaurante.getCozinha().getId();
+		
+		Cozinha cozinha = cozinhaService.buscarOuFalhar(cozinhaId);
+		
+		restaurante.setCozinha(cozinha);
+		
+		return restauranteRepository.save(restaurante);
+	}
+	
+	public Restaurante buscarOuFalhar(Long restauranteId) {
+		return restauranteRepository.findById(restauranteId)
+			.orElseThrow(() -> new RestauranteNaoEncontradoException(restauranteId));
+	}
 
 }
