@@ -1,7 +1,6 @@
 package com.algaworks.algafood_api.api.controller;
 
 import org.springframework.web.bind.annotation.PathVariable;
-import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.BeanUtils;
 import org.springframework.web.bind.annotation.RestController;
@@ -12,11 +11,9 @@ import org.springframework.util.ReflectionUtils;
 import tools.jackson.databind.json.JsonMapper;
 
 import com.algaworks.algafood_api.domain.exception.CozinhaNaoEncontradaException;
-import com.algaworks.algafood_api.domain.exception.EntidadeNaoEncontradaException;
 import com.algaworks.algafood_api.domain.exception.NegocioException;
 
 import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import com.algaworks.algafood_api.domain.model.Restaurante;
 import com.algaworks.algafood_api.domain.repository.RestauranteRepository;
 import com.algaworks.algafood_api.domain.service.RestauranteService;
