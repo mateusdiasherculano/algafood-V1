@@ -9,11 +9,17 @@ import java.util.Map;
 import java.lang.reflect.Field;
 import org.springframework.util.ReflectionUtils;
 import tools.jackson.databind.json.JsonMapper;
-
+import tools.jackson.databind.DeserializationFeature;
 import com.algaworks.algafood_api.domain.exception.CozinhaNaoEncontradaException;
 import com.algaworks.algafood_api.domain.exception.NegocioException;
 
+import tools.jackson.databind.exc.IgnoredPropertyException;
+import tools.jackson.databind.exc.UnrecognizedPropertyException;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.converter.HttpMessageNotReadableException;
+import org.springframework.http.server.ServletServerHttpRequest;
+
+import jakarta.servlet.http.HttpServletRequest;
 import com.algaworks.algafood_api.domain.model.Restaurante;
 import com.algaworks.algafood_api.domain.repository.RestauranteRepository;
 import com.algaworks.algafood_api.domain.service.RestauranteService;
@@ -79,28 +85,37 @@ public class RestauranteController {
 
     @PatchMapping("/{restauranteId}")
 	public Restaurante atualizarParcial(@PathVariable Long restauranteId,
-			@RequestBody Map<String, Object> campos) {
+			@RequestBody Map<String, Object> campos, HttpServletRequest request) {
 		Restaurante restauranteAtual = restauranteService.buscarOuFalhar(restauranteId);
 		
-		merge(campos, restauranteAtual);
+		merge(campos, restauranteAtual, request);
 		
 		return atualizar(restauranteId, restauranteAtual);
 	}
 
-    private void merge(Map<String, Object> dadosOrigem, Restaurante restauranteDestino) {
-        JsonMapper jsonMapper = new JsonMapper();
-        Restaurante restauranteOrigem = jsonMapper.convertValue(dadosOrigem, Restaurante.class);
+    private void merge(Map<String, Object> dadosOrigem, Restaurante restauranteDestino, HttpServletRequest request) {
 
-        
-        dadosOrigem.forEach((nomePropriedade, valorPropriedade) -> {
-            Field field = ReflectionUtils.findField(Restaurante.class, nomePropriedade);
-            field.setAccessible(true);
+		ServletServerHttpRequest serverHttpRequest = new ServletServerHttpRequest(request);
+        try {
+            JsonMapper jsonMapper = JsonMapper.builder()
+                .enable(
+                DeserializationFeature.FAIL_ON_IGNORED_PROPERTIES,
+                DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES)
+                .build();
+            Restaurante restauranteOrigem = jsonMapper.convertValue(dadosOrigem, Restaurante.class);
 
-            Object novoValor = ReflectionUtils.getField(field, restauranteOrigem);
-
-            ReflectionUtils.setField(field, restauranteDestino, novoValor);
             
-        });
-    }
+            dadosOrigem.forEach((nomePropriedade, valorPropriedade) -> {
+                Field field = ReflectionUtils.findField(Restaurante.class, nomePropriedade);
+                field.setAccessible(true);
 
+                Object novoValor = ReflectionUtils.getField(field, restauranteOrigem);
+
+                ReflectionUtils.setField(field, restauranteDestino, novoValor);
+                
+            });
+        } catch (UnrecognizedPropertyException | IgnoredPropertyException e) {
+            throw new HttpMessageNotReadableException(e.getMessage(), e, serverHttpRequest);
+        }
+    }
 }
