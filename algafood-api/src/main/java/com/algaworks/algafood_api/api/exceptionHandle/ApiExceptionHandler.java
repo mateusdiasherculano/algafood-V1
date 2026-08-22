@@ -1,13 +1,13 @@
 package com.algaworks.algafood_api.api.exceptionHandle;
-import com.fasterxml.jackson.databind.exc.PropertyBindingException;
-import com.fasterxml.jackson.databind.JsonMappingException.Reference;
+import tools.jackson.core.JacksonException.Reference;
+import tools.jackson.databind.exc.InvalidFormatException;
+import tools.jackson.databind.exc.PropertyBindingException;
 import java.util.List;
 
 import java.util.stream.Collectors;
 import com.algaworks.algafood_api.domain.exception.EntidadeEmUsoException;
 import com.algaworks.algafood_api.domain.exception.EntidadeNaoEncontradaException;
 import com.algaworks.algafood_api.domain.exception.NegocioException;
-import com.fasterxml.jackson.databind.exc.InvalidFormatException;
 import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -141,7 +141,7 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler {
 
 	private String joinPath(List<Reference> references) {
 		return references.stream()
-			.map(ref -> ref.getFieldName())
+			.map(ref -> ref.getPropertyName())
 			.collect(Collectors.joining("."));
 	}
 	
