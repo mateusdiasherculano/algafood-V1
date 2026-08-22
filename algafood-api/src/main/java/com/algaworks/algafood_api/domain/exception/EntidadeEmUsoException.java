@@ -1,13 +1,9 @@
 package com.algaworks.algafood_api.domain.exception;
 
-public class EntidadeEmUsoException extends RuntimeException {
-
-    public EntidadeEmUsoException(String message) {
-        super(message);
-    }
-
-    public EntidadeEmUsoException(String message, Throwable cause) {
-        super(message, cause);
-    }
-
+public class EntidadeEmUsoException extends NegocioException {
+	
+	public EntidadeEmUsoException(String mensagem) {
+		super(mensagem);
+	}
+	
 }
