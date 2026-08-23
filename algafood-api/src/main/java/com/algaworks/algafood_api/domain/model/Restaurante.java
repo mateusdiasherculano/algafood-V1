@@ -19,7 +19,11 @@ import java.time.LocalDateTime;
 import org.hibernate.annotations.UpdateTimestamp;
 import org.hibernate.annotations.CreationTimestamp;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.PositiveOrZero;
 
 @Data
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
@@ -31,12 +35,15 @@ public class Restaurante {
 	@EqualsAndHashCode.Include
 	private Long id;
 
-	@NotNull
+	@NotBlank
     @Column(nullable = false)
 	private String nome;
 
+	@PositiveOrZero
     private BigDecimal taxaFrete;
 
+	@Valid
+	@NotNull
     @ManyToOne 
 	@JoinColumn(name = "cozinha_id", nullable = false)
     private Cozinha cozinha;
