@@ -19,11 +19,11 @@ import java.time.LocalDateTime;
 import org.hibernate.annotations.UpdateTimestamp;
 import org.hibernate.annotations.CreationTimestamp;
 import com.fasterxml.jackson.annotation.JsonIgnore;
-
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.PositiveOrZero;
+import com.algaworks.algafood_api.Groups;
 
 @Data
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
@@ -35,15 +35,15 @@ public class Restaurante {
 	@EqualsAndHashCode.Include
 	private Long id;
 
-	@NotBlank
+	@NotBlank(groups = Groups.CadastroRestaurante.class)
     @Column(nullable = false)
 	private String nome;
 
-	@PositiveOrZero
+	@PositiveOrZero(groups = Groups.CadastroRestaurante.class)
     private BigDecimal taxaFrete;
 
 	@Valid
-	@NotNull
+	@NotNull(groups = Groups.CadastroRestaurante.class)
     @ManyToOne 
 	@JoinColumn(name = "cozinha_id", nullable = false)
     private Cozinha cozinha;
