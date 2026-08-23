@@ -19,6 +19,7 @@ import java.time.LocalDateTime;
 import org.hibernate.annotations.UpdateTimestamp;
 import org.hibernate.annotations.CreationTimestamp;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import jakarta.validation.constraints.NotNull;
 
 @Data
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
@@ -30,6 +31,7 @@ public class Restaurante {
 	@EqualsAndHashCode.Include
 	private Long id;
 
+	@NotNull
     @Column(nullable = false)
 	private String nome;
 
