@@ -20,6 +20,7 @@ import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
 import org.springframework.web.servlet.resource.NoResourceFoundException;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
+import java.time.LocalDateTime;
 
 
 @ControllerAdvice
@@ -37,7 +38,9 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler {
 		String detail = MSG_ERRO_GENERICO_USUARIO_FINAL;
 		ex.printStackTrace();
 		
-		Problem problem = createProblemBuilder(status, problemType, detail).build();
+		Problem problem = createProblemBuilder(status, problemType, detail)
+			.userMessage(MSG_ERRO_GENERICO_USUARIO_FINAL)
+			.timestamp(LocalDateTime.now()).build();
 
 		return handleExceptionInternal(ex, problem, new HttpHeaders(), status, request);
 	}
@@ -50,7 +53,9 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler {
 		String detail = String.format("O recurso %s, que você tentou acessar, é inexistente.",
 				ex.getResourcePath());
 
-		Problem problem = createProblemBuilder(status, problemType, detail).build();
+		Problem problem = createProblemBuilder(status, problemType, detail)
+			.userMessage(detail)
+			.timestamp(LocalDateTime.now()).build();
 
 		return handleExceptionInternal(ex, problem, headers, status, request);
 	}
@@ -77,7 +82,9 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler {
 				+ "que é de um tipo inválido. Corrija e informe um valor compatível com o tipo %s.",
 				ex.getName(), ex.getValue(), ex.getRequiredType().getSimpleName());
 
-		Problem problem = createProblemBuilder(status, problemType, detail).build();
+		Problem problem = createProblemBuilder(status, problemType, detail)
+			.userMessage(detail)
+			.timestamp(LocalDateTime.now()).build();
 
 		return handleExceptionInternal(ex, problem, headers, status, request);
 	}
@@ -96,7 +103,9 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler {
 		ProblemType problemType = ProblemType.MENSAGEM_INCOMPREENSIVEL;
 		String detail = "O corpo da requisição está inválido. Verifique erro de sintaxe.";
 		
-		Problem problem = createProblemBuilder(status, problemType, detail).build();
+		Problem problem = createProblemBuilder(status, problemType, detail)
+			.userMessage(MSG_ERRO_GENERICO_USUARIO_FINAL)
+			.timestamp(LocalDateTime.now()).build();
 		
 		return handleExceptionInternal(ex, problem, headers, status, request);
 	}
@@ -111,7 +120,7 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler {
 				+ "Corrija ou remova essa propriedade e tente novamente.", path);
 
 		Problem problem = createProblemBuilder(status, problemType, detail)
-			.userMessage(MSG_ERRO_GENERICO_USUARIO_FINAL).build();
+			.userMessage(MSG_ERRO_GENERICO_USUARIO_FINAL).timestamp(LocalDateTime.now()).build();
 		
 		return handleExceptionInternal(ex, problem, headers, status, request);
 	}
@@ -127,7 +136,7 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler {
 				path, ex.getValue(), ex.getTargetType().getSimpleName());
 		
 		Problem problem = createProblemBuilder(status, problemType, detail)
-			.userMessage(MSG_ERRO_GENERICO_USUARIO_FINAL).build();
+			.userMessage(MSG_ERRO_GENERICO_USUARIO_FINAL).timestamp(LocalDateTime.now()).build();
 		
 		return handleExceptionInternal(ex, problem, headers, status, request);
 	}
@@ -140,7 +149,9 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler {
 		ProblemType problemType = ProblemType.RECURSO_NAO_ENCONTRADO;
 		String detail = ex.getMessage();
 		
-		Problem problem = createProblemBuilder(status, problemType, detail).build();
+		Problem problem = createProblemBuilder(status, problemType, detail)
+			.userMessage(detail)
+			.timestamp(LocalDateTime.now()).build();
 		
 		return handleExceptionInternal(ex, problem, new HttpHeaders(), status, request);
 	}
@@ -154,7 +165,8 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler {
 		String detail = ex.getMessage();
 		
 		Problem problem = createProblemBuilder(status, problemType, detail)
-			.userMessage(detail).build();
+			.userMessage(detail)
+			.timestamp(LocalDateTime.now()).build();
 		
 		return handleExceptionInternal(ex, problem, new HttpHeaders(), status, request);
 	}
@@ -166,7 +178,9 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler {
 		ProblemType problemType = ProblemType.ERRO_NEGOCIO;
 		String detail = ex.getMessage();
 		
-		Problem problem = createProblemBuilder(status, problemType, detail).build();
+		Problem problem = createProblemBuilder(status, problemType, detail)
+			.userMessage(detail)
+			.timestamp(LocalDateTime.now()).build();
 		
 		return handleExceptionInternal(ex, problem, new HttpHeaders(), status, request);
 	}
