@@ -23,6 +23,8 @@ import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.PositiveOrZero;
+import jakarta.validation.groups.ConvertGroup;
+import jakarta.validation.groups.Default;
 import com.algaworks.algafood_api.Groups;
 
 @Data
@@ -35,15 +37,16 @@ public class Restaurante {
 	@EqualsAndHashCode.Include
 	private Long id;
 
-	@NotBlank(groups = Groups.CadastroRestaurante.class)
+	@NotBlank
     @Column(nullable = false)
 	private String nome;
 
-	@PositiveOrZero(groups = Groups.CadastroRestaurante.class)
+	@PositiveOrZero
     private BigDecimal taxaFrete;
 
 	@Valid
-	@NotNull(groups = Groups.CadastroRestaurante.class)
+	@NotNull
+	@ConvertGroup(from = Default.class, to = Groups.CozinhaId.class)
     @ManyToOne 
 	@JoinColumn(name = "cozinha_id", nullable = false)
     private Cozinha cozinha;

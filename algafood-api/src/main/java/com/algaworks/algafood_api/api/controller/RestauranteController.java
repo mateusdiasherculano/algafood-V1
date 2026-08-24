@@ -20,8 +20,6 @@ import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.http.server.ServletServerHttpRequest;
 
 import jakarta.servlet.http.HttpServletRequest;
-import com.algaworks.algafood_api.Groups;
-
 import com.algaworks.algafood_api.domain.model.Restaurante;
 import com.algaworks.algafood_api.domain.repository.RestauranteRepository;
 import com.algaworks.algafood_api.domain.service.RestauranteService;
@@ -32,7 +30,7 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.validation.annotation.Validated;
+import jakarta.validation.Valid;
 
 
 @RestController
@@ -63,7 +61,7 @@ public class RestauranteController {
 
     @PostMapping
 	@ResponseStatus(HttpStatus.CREATED)
-	public Restaurante adicionar(@RequestBody @Validated(Groups.CadastroRestaurante.class) Restaurante restaurante) {
+	public Restaurante adicionar(@RequestBody @Valid Restaurante restaurante) {
 		try {
 			return restauranteService.salvar(restaurante);
 		} catch (CozinhaNaoEncontradaException e) {
