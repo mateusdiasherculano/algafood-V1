@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.DeleteMapping;
+import jakarta.validation.Valid;
 
 
 @RestController
@@ -45,13 +46,13 @@ public class CozinhaController {
 	
 	@PostMapping
 	@ResponseStatus(HttpStatus.CREATED)
-	public Cozinha adicionar(@RequestBody @Validated Cozinha cozinha) {
+	public Cozinha adicionar(@RequestBody @Valid Cozinha cozinha) {
 		return cozinhaService.salvar(cozinha);
 	}
 	
 	@PutMapping("/{cozinhaId}")
 	public Cozinha atualizar(@PathVariable Long cozinhaId,
-			@RequestBody Cozinha cozinha) {
+			@RequestBody @Valid Cozinha cozinha) {
 		Cozinha cozinhaAtual = cozinhaService.buscarOuFalhar(cozinhaId);
 		
 		BeanUtils.copyProperties(cozinha, cozinhaAtual, "id");
