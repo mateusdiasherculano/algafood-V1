@@ -17,7 +17,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import com.algaworks.algafood_api.domain.exception.EstadoNaoEncontradoException;
 import com.algaworks.algafood_api.domain.exception.NegocioException;
-
+import jakarta.validation.Valid;
 
 @RestController
 @RequestMapping(value = "/cidades")
@@ -46,7 +46,7 @@ public class CidadeController {
 	
 	@PostMapping
 	@ResponseStatus(HttpStatus.CREATED)
-	public Cidade adicionar(@RequestBody Cidade cidade) {
+	public Cidade adicionar(@RequestBody @Valid Cidade cidade) {
 		try {
 			return cidadeService.salvar(cidade);
 		} catch (EstadoNaoEncontradoException e) {
@@ -56,7 +56,7 @@ public class CidadeController {
 	
 	@PutMapping("/{cidadeId}")
 	public Cidade atualizar(@PathVariable Long cidadeId,
-			@RequestBody Cidade cidade) {
+			@RequestBody @Valid Cidade cidade) {
 		try {
 			Cidade cidadeAtual = cidadeService.buscarOuFalhar(cidadeId);
 			
