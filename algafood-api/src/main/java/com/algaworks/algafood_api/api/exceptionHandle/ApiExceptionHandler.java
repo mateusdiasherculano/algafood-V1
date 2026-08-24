@@ -4,6 +4,9 @@ import tools.jackson.databind.exc.InvalidFormatException;
 import tools.jackson.databind.exc.PropertyBindingException;
 import java.util.List;
 import org.springframework.beans.TypeMismatchException;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.MessageSource;
+import org.springframework.context.i18n.LocaleContextHolder;
 import java.util.stream.Collectors;
 import com.algaworks.algafood_api.domain.exception.EntidadeEmUsoException;
 import com.algaworks.algafood_api.domain.exception.EntidadeNaoEncontradaException;
@@ -27,6 +30,12 @@ import java.time.LocalDateTime;
 @ControllerAdvice
 public class ApiExceptionHandler extends ResponseEntityExceptionHandler {
 
+	@Autowired
+	private MessageSource messageSource;
+
+	public ApiExceptionHandler(MessageSource messageSource) {
+		this.messageSource = messageSource;
+	}
 
 	private static final String MSG_ERRO_GENERICO_USUARIO_FINAL = "Ocorreu um erro interno inesperado no sistema. "
 			+ "Tente novamente e se o problema persistir, entre em contato "
@@ -41,10 +50,14 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler {
 
 		BindingResult bindingResult = ex.getBindingResult();
 		List<Problem.Field> problemFields = bindingResult.getFieldErrors().stream()
-				.map(fieldError -> Problem.Field.builder()
+				.map(fieldError -> {
+					String message = messageSource.getMessage(fieldError, LocaleContextHolder.getLocale());
+					
+					return Problem.Field.builder()
 						.name(fieldError.getField())
-						.userMessage(fieldError.getDefaultMessage())
-						.build()).collect(Collectors.toList());
+						.userMessage(message)
+						.build();
+					}).collect(Collectors.toList());
 				
 
 		Problem problem = createProblemBuilder(status, problemType, detail)
