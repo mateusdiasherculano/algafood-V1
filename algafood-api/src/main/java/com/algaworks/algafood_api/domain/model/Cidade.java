@@ -1,5 +1,6 @@
 package com.algaworks.algafood_api.domain.model;
 
+import com.algaworks.algafood_api.core.validation.Groups;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import lombok.Data;
@@ -13,7 +14,6 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.groups.ConvertGroup;
 import jakarta.validation.groups.Default;
-import com.algaworks.algafood_api.Groups;
 
 @Data
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
