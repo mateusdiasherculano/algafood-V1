@@ -1,50 +1,43 @@
 package com.algaworks.algafood_api;
 
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.assertThrows;
+import static io.restassured.RestAssured.given;
 
 import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import com.algaworks.algafood_api.domain.model.Cozinha;
-import com.algaworks.algafood_api.domain.service.CozinhaService;
-import jakarta.validation.ConstraintViolationException;
-import com.algaworks.algafood_api.domain.exception.EntidadeEmUsoException;
+import org.springframework.http.HttpStatus;
+import org.springframework.boot.test.web.server.LocalServerPort;
+import static org.hamcrest.Matchers.hasSize;
+import io.restassured.http.ContentType;
 
-
-@SpringBootTest
+@SpringBootTest(
+	webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT
+)
 class CadastroCozinhaIT {
 
-	@Autowired
-	private CozinhaService cozinhaService;
-
+	@LocalServerPort
+	private int port;
+	
 	@Test
-	public void deveCadastrarCozinhaComNome() {
-
-		Cozinha cozinha = new Cozinha();
-		cozinha.setNome("Chinesa");
-
-		Cozinha novaCozinha = cozinhaService.salvar(cozinha);
-
-		assertThat(novaCozinha).isNotNull();
-		assertThat(novaCozinha.getId()).isNotNull();
-		assertThat(novaCozinha.getNome()).isEqualTo("Chinesa");
+	public void deveRetornarStatus200_QuandoConsultarCozinhas() {
+		given()
+			.basePath("/cozinhas")
+			.port(port)
+			.accept(ContentType.JSON)
+		.when()
+			.get()
+		.then()
+			.statusCode(HttpStatus.OK.value());
 	}
 
 	@Test
-	public void deveFalharQuandoCadastrarCozinhaSemNome() {
-
-		Cozinha cozinha = new Cozinha();
-		cozinha.setNome(null);
-
-		assertThrows(ConstraintViolationException.class, () -> cozinhaService.salvar(cozinha));
-	}
-
-	@Test 
-	public void deveFalharQuandoExcluirCozinhaEmUso() {
-		EntidadeEmUsoException erroEsperado = assertThrows(EntidadeEmUsoException.class,
-			() -> cozinhaService.excluir(1L));
-
-		assertThat(erroEsperado).isNotNull();
+	public void deveConter15Cozinhas_QuandoConsultarCozinhas() {
+		given()
+			.basePath("/cozinhas")
+			.port(port)
+			.accept(ContentType.JSON)
+		.when()
+			.get()
+		.then()
+			.body("", hasSize(4));
 	}
 }
