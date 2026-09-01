@@ -19,8 +19,6 @@ import java.time.LocalDateTime;
 import org.hibernate.annotations.UpdateTimestamp;
 import org.hibernate.annotations.CreationTimestamp;
 import com.algaworks.algafood_api.core.validation.Groups;
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotBlank;
@@ -46,25 +44,21 @@ public class Restaurante {
 	@NotNull
 	@PositiveOrZero
     private BigDecimal taxaFrete;
-
-	@JsonIgnoreProperties(value = "nome", allowGetters = true)
+	
 	@Valid
 	@NotNull
 	@ConvertGroup(from = Default.class, to = Groups.CozinhaId.class)
     @ManyToOne 
 	@JoinColumn(name = "cozinha_id", nullable = false)
     private Cozinha cozinha;
-
-	@JsonIgnore
+	
 	@Embedded
 	private Endereco endereco;
 
-	@JsonIgnore
 	@CreationTimestamp
 	@Column(nullable = false)
 	private LocalDateTime dataCadastro;
 
-	@JsonIgnore
 	@UpdateTimestamp
 	@Column(nullable = false)
 	private LocalDateTime dataAtualizacao;
@@ -75,7 +69,6 @@ public class Restaurante {
 		inverseJoinColumns = @JoinColumn(name = "forma_pagamento_id"))
 	private List<FormaPagamento> formasPagamento = new ArrayList<>();
 
-	@JsonIgnore
 	@OneToMany(mappedBy = "restaurante")
 	private List<Produto> produtos = new ArrayList<>();
 }
