@@ -48,7 +48,7 @@ public class RestauranteController {
         this.restauranteService = restauranteService;
     }
 
-    @GetMapping()
+    @GetMapping
     public List<Restaurante> listar() {
         return restauranteRepository.findAll();
     }

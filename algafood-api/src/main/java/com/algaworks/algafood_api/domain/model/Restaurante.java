@@ -20,6 +20,8 @@ import org.hibernate.annotations.UpdateTimestamp;
 import org.hibernate.annotations.CreationTimestamp;
 import com.algaworks.algafood_api.core.validation.Groups;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
@@ -45,6 +47,7 @@ public class Restaurante {
 	@PositiveOrZero
     private BigDecimal taxaFrete;
 
+	@JsonIgnoreProperties(value = "nome", allowGetters = true)
 	@Valid
 	@NotNull
 	@ConvertGroup(from = Default.class, to = Groups.CozinhaId.class)
