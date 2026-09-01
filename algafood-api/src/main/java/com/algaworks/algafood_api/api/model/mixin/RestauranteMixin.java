@@ -13,7 +13,7 @@ import org.springframework.boot.jackson.JacksonMixin;
 import com.algaworks.algafood_api.domain.model.Restaurante;
 
 @JacksonMixin(Restaurante.class)
-public class RestauranteMixin {
+public abstract class RestauranteMixin {
     
     @JsonIgnoreProperties(value = "nome", allowGetters = true)
     private Cozinha cozinha;
