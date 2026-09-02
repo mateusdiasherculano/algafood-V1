@@ -16,6 +16,8 @@ import jakarta.persistence.JoinTable;
 import java.util.ArrayList;
 import java.util.List;
 import java.time.LocalDateTime;
+import java.time.OffsetDateTime;
+
 import org.hibernate.annotations.UpdateTimestamp;
 import org.hibernate.annotations.CreationTimestamp;
 import com.algaworks.algafood_api.core.validation.Groups;
@@ -57,11 +59,11 @@ public class Restaurante {
 
 	@CreationTimestamp
 	@Column(nullable = false)
-	private LocalDateTime dataCadastro;
+	private OffsetDateTime dataCadastro;
 
 	@UpdateTimestamp
 	@Column(nullable = false)
-	private LocalDateTime dataAtualizacao;
+	private OffsetDateTime dataAtualizacao;
 
 	@ManyToMany
 	@JoinTable(name = "restaurante_forma_pagamento",
