@@ -15,7 +15,6 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.JoinTable;
 import java.util.ArrayList;
 import java.util.List;
-import java.time.LocalDateTime;
 import java.time.OffsetDateTime;
 
 import org.hibernate.annotations.UpdateTimestamp;
