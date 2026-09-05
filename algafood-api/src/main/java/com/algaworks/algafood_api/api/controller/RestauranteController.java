@@ -5,7 +5,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.BeanUtils;
 import org.springframework.web.bind.annotation.RestController;
 import java.util.List;
-import java.util.stream.Collectors;
 import com.algaworks.algafood_api.api.dto.RestauranteDto;
 import com.algaworks.algafood_api.api.dto.input.RestauranteInput;
 import com.algaworks.algafood_api.domain.exception.CozinhaNaoEncontradaException;
@@ -49,7 +48,7 @@ public class RestauranteController {
 
     @GetMapping
     public List<RestauranteDto> listar() {
-        return toCollectionDto(restauranteRepository.findAll());
+        return restauranteDtoAssembler.toCollectionDto(restauranteRepository.findAll());
     }
 
     @GetMapping("/{restauranteId}")
@@ -87,9 +86,4 @@ public class RestauranteController {
 	}
 
 	
-	private List<RestauranteDto> toCollectionDto(List<Restaurante> restaurantes) {
-		return restaurantes.stream()
-				.map(restaurante -> restauranteDtoAssembler.toDto(restaurante))
-				.collect(Collectors.toList());
-	}
 }
