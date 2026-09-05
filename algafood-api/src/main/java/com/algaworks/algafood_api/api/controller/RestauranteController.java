@@ -5,26 +5,16 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.BeanUtils;
 import org.springframework.web.bind.annotation.RestController;
 import java.util.List;
-import java.util.Map;
-import java.lang.reflect.Field;
-import org.springframework.util.ReflectionUtils;
-import tools.jackson.databind.json.JsonMapper;
-import tools.jackson.databind.DeserializationFeature;
+import java.util.stream.Collectors;
+import com.algaworks.algafood_api.api.dto.CozinhaDto;
+import com.algaworks.algafood_api.api.dto.RestauranteDto;
 import com.algaworks.algafood_api.domain.exception.CozinhaNaoEncontradaException;
 import com.algaworks.algafood_api.domain.exception.NegocioException;
-
-import tools.jackson.databind.exc.IgnoredPropertyException;
-import tools.jackson.databind.exc.UnrecognizedPropertyException;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.converter.HttpMessageNotReadableException;
-import org.springframework.http.server.ServletServerHttpRequest;
-
-import jakarta.servlet.http.HttpServletRequest;
 import com.algaworks.algafood_api.domain.model.Restaurante;
 import com.algaworks.algafood_api.domain.repository.RestauranteRepository;
 import com.algaworks.algafood_api.domain.service.RestauranteService;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -49,28 +39,28 @@ public class RestauranteController {
     }
 
     @GetMapping
-    public List<Restaurante> listar() {
-        return restauranteRepository.findAll();
+    public List<RestauranteDto> listar() {
+        return toCollectionDto(restauranteRepository.findAll());
     }
 
     @GetMapping("/{restauranteId}")
-	public Restaurante buscar(@PathVariable Long restauranteId) {
-		return restauranteService.buscarOuFalhar(restauranteId);
+	public RestauranteDto buscar(@PathVariable Long restauranteId) {
+		return toModel(restauranteService.buscarOuFalhar(restauranteId));
 	}
 	
 
     @PostMapping
 	@ResponseStatus(HttpStatus.CREATED)
-	public Restaurante adicionar(@RequestBody @Valid Restaurante restaurante) {
+	public RestauranteDto adicionar(@RequestBody @Valid Restaurante restaurante) {
 		try {
-			return restauranteService.salvar(restaurante);
+			return toModel(restauranteService.salvar(restaurante));
 		} catch (CozinhaNaoEncontradaException e) {
 			throw new NegocioException(e.getMessage());
 		}
 	}
 
     @PutMapping("/{restauranteId}")
-	public Restaurante atualizar(@PathVariable Long restauranteId,
+	public RestauranteDto atualizar(@PathVariable Long restauranteId,
             @RequestBody @Valid Restaurante restaurante) {
 		try {
 			Restaurante restauranteAtual = restauranteService.buscarOuFalhar(restauranteId);
@@ -78,45 +68,28 @@ public class RestauranteController {
 			BeanUtils.copyProperties(restaurante, restauranteAtual, 
 					"id", "formasPagamento", "endereco", "dataCadastro", "produtos");
 
-			return restauranteService.salvar(restauranteAtual);
+			return toModel(restauranteService.salvar(restauranteAtual));
 		} catch (CozinhaNaoEncontradaException e) {
 			throw new NegocioException(e.getMessage());
 		}
 	}
 
-    @PatchMapping("/{restauranteId}")
-	public Restaurante atualizarParcial(@PathVariable Long restauranteId,
-			@RequestBody Map<String, Object> campos, HttpServletRequest request) {
-		Restaurante restauranteAtual = restauranteService.buscarOuFalhar(restauranteId);
+    private RestauranteDto toModel(Restaurante restaurante) {
+		CozinhaDto cozinhaDto = new CozinhaDto();
+		cozinhaDto.setId(restaurante.getCozinha().getId());
+		cozinhaDto.setNome(restaurante.getCozinha().getNome());
 		
-		merge(campos, restauranteAtual, request);
-		
-		return atualizar(restauranteId, restauranteAtual);
+		RestauranteDto restauranteDto = new RestauranteDto();
+		restauranteDto.setId(restaurante.getId());
+		restauranteDto.setNome(restaurante.getNome());
+		restauranteDto.setTaxaFrete(restaurante.getTaxaFrete());
+		restauranteDto.setCozinha(cozinhaDto);
+		return restauranteDto;
 	}
-
-    private void merge(Map<String, Object> dadosOrigem, Restaurante restauranteDestino, HttpServletRequest request) {
-
-		ServletServerHttpRequest serverHttpRequest = new ServletServerHttpRequest(request);
-        try {
-            JsonMapper jsonMapper = JsonMapper.builder()
-                .enable(
-                DeserializationFeature.FAIL_ON_IGNORED_PROPERTIES,
-                DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES)
-                .build();
-            Restaurante restauranteOrigem = jsonMapper.convertValue(dadosOrigem, Restaurante.class);
-
-            
-            dadosOrigem.forEach((nomePropriedade, valorPropriedade) -> {
-                Field field = ReflectionUtils.findField(Restaurante.class, nomePropriedade);
-                field.setAccessible(true);
-
-                Object novoValor = ReflectionUtils.getField(field, restauranteOrigem);
-
-                ReflectionUtils.setField(field, restauranteDestino, novoValor);
-                
-            });
-        } catch (UnrecognizedPropertyException | IgnoredPropertyException e) {
-            throw new HttpMessageNotReadableException(e.getMessage(), e, serverHttpRequest);
-        }
-    }
+	
+	private List<RestauranteDto> toCollectionDto(List<Restaurante> restaurantes) {
+		return restaurantes.stream()
+				.map(restaurante -> toModel(restaurante))
+				.collect(Collectors.toList());
+	}
 }
