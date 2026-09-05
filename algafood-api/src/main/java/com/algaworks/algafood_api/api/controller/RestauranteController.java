@@ -39,7 +39,8 @@ public class RestauranteController {
     @Autowired
     private RestauranteInputDisassembler restauranteInputDisassembler;
 
-    public RestauranteController(RestauranteRepository restauranteRepository, RestauranteService restauranteService, RestauranteDtoAssembler restauranteDtoAssembler, RestauranteInputDisassembler restauranteInputDisassembler) {
+    public RestauranteController(RestauranteRepository restauranteRepository, RestauranteService restauranteService,
+        RestauranteDtoAssembler restauranteDtoAssembler, RestauranteInputDisassembler restauranteInputDisassembler) {
         this.restauranteRepository = restauranteRepository;
         this.restauranteService = restauranteService;
         this.restauranteDtoAssembler = restauranteDtoAssembler;
@@ -74,12 +75,11 @@ public class RestauranteController {
             @RequestBody @Valid RestauranteInput restauranteInput) {
 		try {
 			Restaurante restauranteAtual = restauranteService.buscarOuFalhar(restauranteId);
-            Restaurante restaurante = restauranteInputDisassembler.toDomainObject(restauranteInput);
-
-			BeanUtils.copyProperties(restaurante, restauranteAtual, 
-					"id", "formasPagamento", "endereco", "dataCadastro", "produtos");
+        
+			restauranteInputDisassembler.copyToDomainObject(restauranteInput, restauranteAtual);
 
 			return restauranteDtoAssembler.toDto(restauranteService.salvar(restauranteAtual));
+            
 		} catch (CozinhaNaoEncontradaException e) {
 			throw new NegocioException(e.getMessage());
 		}
