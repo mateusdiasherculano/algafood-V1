@@ -2,7 +2,6 @@ package com.algaworks.algafood_api.api.controller;
 
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.BeanUtils;
 import org.springframework.web.bind.annotation.RestController;
 import java.util.List;
 import com.algaworks.algafood_api.api.dto.RestauranteDto;
@@ -79,7 +78,7 @@ public class RestauranteController {
 			restauranteInputDisassembler.copyToDomainObject(restauranteInput, restauranteAtual);
 
 			return restauranteDtoAssembler.toDto(restauranteService.salvar(restauranteAtual));
-            
+
 		} catch (CozinhaNaoEncontradaException e) {
 			throw new NegocioException(e.getMessage());
 		}
