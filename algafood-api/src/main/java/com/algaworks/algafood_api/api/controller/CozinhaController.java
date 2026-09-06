@@ -3,7 +3,6 @@ import com.algaworks.algafood_api.domain.model.Cozinha;
 import com.algaworks.algafood_api.domain.repository.CozinhaRepository;
 import com.algaworks.algafood_api.domain.service.CozinhaService;
 import java.util.List;
-import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -16,6 +15,10 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import jakarta.validation.Valid;
+import com.algaworks.algafood_api.api.assembler.CozinhaDtoAssembler;
+import com.algaworks.algafood_api.api.disassembler.CozinhaInputDisassembler;
+import com.algaworks.algafood_api.api.dto.CozinhaDto;
+import com.algaworks.algafood_api.api.dto.input.CozinhaInput;
 
 
 @RestController
@@ -28,35 +31,51 @@ public class CozinhaController {
     @Autowired
     private CozinhaService cozinhaService;
 
-    CozinhaController(CozinhaRepository cozinhaRepository, CozinhaService cozinhaService) {
+	@Autowired 
+	private CozinhaDtoAssembler cozinhaDtoAssembler;
+
+	@Autowired 
+	private CozinhaInputDisassembler cozinhaDtoDisassembler;
+
+	@Autowired
+	private CozinhaInputDisassembler cozinhaInputDisassembler;
+
+
+    CozinhaController(CozinhaRepository cozinhaRepository, CozinhaService cozinhaService,
+		CozinhaDtoAssembler cozinhaDtoAssembler, CozinhaInputDisassembler cozinhaDtoDisassembler,
+		 CozinhaInputDisassembler cozinhaInputDisassembler) {
         this.cozinhaRepository = cozinhaRepository;
         this.cozinhaService = cozinhaService;
+        this.cozinhaDtoAssembler = cozinhaDtoAssembler;
+        this.cozinhaDtoDisassembler = cozinhaDtoDisassembler;
+        this.cozinhaInputDisassembler = cozinhaInputDisassembler;
     }
     
     @GetMapping
-	public List<Cozinha> listar() {
-		return cozinhaRepository.findAll();
+	public List<CozinhaDto> listar() {
+		return cozinhaDtoAssembler.toCollectionDto(cozinhaRepository.findAll());
 	}
 	
 	@GetMapping("/{cozinhaId}")
-	public Cozinha buscar(@PathVariable Long cozinhaId) {
-		return cozinhaService.buscarOuFalhar(cozinhaId);
+	public CozinhaDto buscar(@PathVariable Long cozinhaId) {
+		return cozinhaDtoAssembler.toDto(cozinhaService.buscarOuFalhar(cozinhaId));
 	}
 	
 	@PostMapping
 	@ResponseStatus(HttpStatus.CREATED)
-	public Cozinha adicionar(@RequestBody @Valid Cozinha cozinha) {
-		return cozinhaService.salvar(cozinha);
+	public CozinhaDto adicionar(@RequestBody @Valid CozinhaInput cozinhaInput) {
+		Cozinha cozinha = cozinhaInputDisassembler.toDomainObject(cozinhaInput);
+		return cozinhaDtoAssembler.toDto(cozinhaService.salvar(cozinha));
 	}
 	
 	@PutMapping("/{cozinhaId}")
-	public Cozinha atualizar(@PathVariable Long cozinhaId,
-			@RequestBody @Valid Cozinha cozinha) {
+	public CozinhaDto atualizar(@PathVariable Long cozinhaId,
+			@RequestBody @Valid CozinhaInput cozinha) {
 		Cozinha cozinhaAtual = cozinhaService.buscarOuFalhar(cozinhaId);
 		
-		BeanUtils.copyProperties(cozinha, cozinhaAtual, "id");
+		cozinhaInputDisassembler.copyToDomainObject(cozinha, cozinhaAtual);
 		
-		return cozinhaService.salvar(cozinhaAtual);
+		return cozinhaDtoAssembler.toDto(cozinhaService.salvar(cozinhaAtual));
 	}
 	
 	@DeleteMapping("/{cozinhaId}")
