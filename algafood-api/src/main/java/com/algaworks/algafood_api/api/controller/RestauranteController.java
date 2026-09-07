@@ -20,7 +20,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.PutMapping;
 import jakarta.validation.Valid;
 import com.algaworks.algafood_api.api.assembler.RestauranteDtoAssembler;
-import com.algaworks.algafood_api.api.assembler.RestauranteInputDisassembler;
+import com.algaworks.algafood_api.api.disassembler.RestauranteInputDisassembler;
 
 @RestController
 @RequestMapping("/restaurantes")
@@ -55,7 +55,6 @@ public class RestauranteController {
 	public RestauranteDto buscar(@PathVariable Long restauranteId) {
 		return restauranteDtoAssembler.toDto(restauranteService.buscarOuFalhar(restauranteId));
 	}
-	
 
     @PostMapping
 	@ResponseStatus(HttpStatus.CREATED)

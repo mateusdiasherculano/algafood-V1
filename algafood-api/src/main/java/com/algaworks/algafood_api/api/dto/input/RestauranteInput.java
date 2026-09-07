@@ -8,6 +8,9 @@ import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.PositiveOrZero;
+import jakarta.validation.groups.ConvertGroup;
+import jakarta.validation.groups.Default;
+import com.algaworks.algafood_api.core.validation.Groups;
 
 
 @Getter 
@@ -23,5 +26,6 @@ public class RestauranteInput {
 
     @Valid 
     @NotNull 
+	@ConvertGroup(from = Default.class, to = Groups.CozinhaId.class)
     private CozinhaInput cozinha;
 }

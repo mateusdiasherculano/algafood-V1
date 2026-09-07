@@ -1,4 +1,4 @@
-package com.algaworks.algafood_api.api.assembler;
+package com.algaworks.algafood_api.api.disassembler;
 
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
