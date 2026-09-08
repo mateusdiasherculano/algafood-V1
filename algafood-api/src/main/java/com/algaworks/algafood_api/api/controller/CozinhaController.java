@@ -34,20 +34,16 @@ public class CozinhaController {
 	@Autowired 
 	private CozinhaDtoAssembler cozinhaDtoAssembler;
 
-	@Autowired 
-	private CozinhaInputDisassembler cozinhaDtoDisassembler;
-
 	@Autowired
 	private CozinhaInputDisassembler cozinhaInputDisassembler;
 
 
     CozinhaController(CozinhaRepository cozinhaRepository, CozinhaService cozinhaService,
-		CozinhaDtoAssembler cozinhaDtoAssembler, CozinhaInputDisassembler cozinhaDtoDisassembler,
+		CozinhaDtoAssembler cozinhaDtoAssembler,
 		 CozinhaInputDisassembler cozinhaInputDisassembler) {
         this.cozinhaRepository = cozinhaRepository;
         this.cozinhaService = cozinhaService;
         this.cozinhaDtoAssembler = cozinhaDtoAssembler;
-        this.cozinhaDtoDisassembler = cozinhaDtoDisassembler;
         this.cozinhaInputDisassembler = cozinhaInputDisassembler;
     }
     

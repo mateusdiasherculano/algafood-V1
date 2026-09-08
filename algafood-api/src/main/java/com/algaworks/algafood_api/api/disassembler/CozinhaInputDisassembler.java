@@ -1,5 +1,4 @@
 package com.algaworks.algafood_api.api.disassembler;
-import com.algaworks.algafood_api.api.dto.CozinhaDto;
 import com.algaworks.algafood_api.domain.model.Cozinha;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Component;
@@ -12,10 +11,6 @@ public class CozinhaInputDisassembler {
 
     public CozinhaInputDisassembler(ModelMapper modelMapper) {
         this.modelMapper = modelMapper;
-    }
-
-    public CozinhaDto toDto(Cozinha cozinha) {
-        return modelMapper.map(cozinha, CozinhaDto.class);
     }
 
     public Cozinha toDomainObject(CozinhaInput cozinhaInput) {

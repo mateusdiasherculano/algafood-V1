@@ -1,8 +1,5 @@
 package com.algaworks.algafood_api.domain.model;
 
-import com.algaworks.algafood_api.core.validation.Groups;
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import lombok.Data;
@@ -11,11 +8,6 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.ManyToOne;
-import jakarta.validation.Valid;
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
-import jakarta.validation.groups.ConvertGroup;
-import jakarta.validation.groups.Default;
 
 @Data
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
@@ -27,14 +19,9 @@ public class Cidade {
     @EqualsAndHashCode.Include
     private Long id;
 
-    @NotBlank
     @Column(nullable = false)
     private String nome;
 
-    @JsonIgnoreProperties(value = "nome", allowGetters = true)
-    @Valid
-    @NotNull
-    @ConvertGroup(from = Default.class, to = Groups.EstadoId.class)
     @ManyToOne
     private Estado estado;
 
